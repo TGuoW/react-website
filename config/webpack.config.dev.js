@@ -171,6 +171,7 @@ module.exports = {
           // in development "style" loader enables hot editing of CSS.
           {
             test: /\.(css|less)$/,
+            exclude: /\.module\.(css|less)/,
             use: [
               require.resolve('style-loader'),
               {

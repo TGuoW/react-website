@@ -1,0 +1,74 @@
+@import url('./config.less');
+.App {
+  text-align: center;
+  height: 100%;
+  width: 100%;
+}
+
+.App-header {
+  background-color: @header-backgroud-color;
+  display: flex;
+  justify-content: space-between;
+  height: @header-height;
+  width: 100%;
+  color: white;
+  .title {
+    display: flex;
+    .logo {
+      animation: App-logo-spin infinite 20s linear;
+      margin-top: 10px;
+      height: @header-height - 20px;
+    }
+    .text {
+      font-size: 0.8rem;
+      line-height: @header-height;
+    }
+  }
+  @media only screen and (min-width: 769px) {
+    .method {
+      .method-btn {
+        display: none;
+      }
+      ul {
+        display: flex !important;
+        li {
+          margin: 0 10px;
+          height: @header-height;
+          line-height: @header-height;
+        }
+      }
+    }
+  }
+  @media only screen and (max-width: 768px) {
+    .method {
+      .method-btn {
+        cursor: pointer;
+        display: block;
+        float: right;
+        margin-right: 16px;
+        height: @header-height;
+        line-height: @header-height;
+        -webkit-appearance: none;
+        background: none;
+      }
+      ul {
+        margin-top: @header-height;
+        // display: none;
+        background: #666666;
+        z-index: 1000;
+        li {
+          width: 120px;
+          height: @header-height;
+          line-height: @header-height;
+          user-select: none;
+          // margin: 0 10px;
+        }
+      }
+    }
+  }
+}
+
+@keyframes App-logo-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
