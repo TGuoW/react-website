@@ -31,6 +31,7 @@
       }
       ul {
         display: flex !important;
+        transform: scale(1) !important;
         li {
           margin: 0 10px;
           height: @header-height;
@@ -61,7 +62,9 @@
           height: @header-height;
           line-height: @header-height;
           user-select: none;
-          // margin: 0 10px;
+          &:active {
+            background: rgb(59, 59, 59);
+          }
         }
       }
     }

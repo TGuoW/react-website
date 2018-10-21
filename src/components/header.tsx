@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { spring, TransitionMotion } from 'react-motion';
+import { Motion, spring } from 'react-motion'
 import logo from '../logo.svg'
 import '../style/header.less'
 
@@ -52,21 +52,13 @@ class Header extends React.Component {
         </div>
         <div className="method f-16 l-36">
           <i className="f-20 method-btn iconfont icon-menu" onClick={ this.showMethod }/>
-          <TransitionMotion styles={this.state.isShowMethod ? [{
-            key: 'items',
-            style: { scale: spring(1) }
-          }] : []}
-            willEnter={this.willEnter}
-            willLeave={this.willLeave}>
-            {(inStyles) => (
-              inStyles[0] ? (
-                <Items items={items} key={inStyles[0].key} style={{
-                  transform: `scale(${inStyles[0].style.scale},${inStyles[0].style.scale})`,
-                  
-                }}/>
-              ) : (<Items items={items} style={ this.state.isShowMethod ? {display: 'block'} : {display: 'none'} }/>)
-            )}
-          </TransitionMotion>
+          <Motion style={{x: spring(this.state.isShowMethod ? 1 : 0)}}>
+            {inStyle => {
+              return (
+                <Items items={items} style={{display: 'block', transform: `scale(${inStyle.x})`, 'transform-origin': 'right top'}}/>
+              )}
+            }
+          </Motion>
         </div>
 
       </header>
