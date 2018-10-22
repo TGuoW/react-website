@@ -55,12 +55,11 @@ class Header extends React.Component {
           <Motion style={{x: spring(this.state.isShowMethod ? 1 : 0)}}>
             {inStyle => {
               return (
-                <Items items={items} style={{display: 'block', transform: `scale(${inStyle.x})`, 'transform-origin': 'right top'}}/>
+                <Items items={items} style={{display: 'block', transform: `scale(${inStyle.x})`, 'transformOrigin': 'right top'}}/>
               )}
             }
           </Motion>
         </div>
-
       </header>
     );
   }
