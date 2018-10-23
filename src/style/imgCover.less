@@ -1,0 +1,32 @@
+@import './config.less';
+.img-cover {
+    position: relative;
+    margin: auto;
+    margin-top: 1rem;
+    height: @avatar-height;
+    overflow: hidden;
+    .avatarImg {
+      position: relative;
+      z-index: 100;
+      height: @avatar-height;
+      width: @avatar-height;
+      border-radius: @avatar-height;
+      object-fit: cover;
+    }
+    ul {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      top: 0;
+      width: 100%;
+      height: @avatar-height;
+      .motion-bar {
+        // width: @avatar-height;
+        height: 5px;
+        border-radius: 3px;
+        margin: auto;
+        background: rgb(179, 179, 179);
+      }
+    }
+  }
