@@ -3,6 +3,8 @@ import {Motion, spring, StaggeredMotion } from 'react-motion'
 import '../style/body.less'
 import ImgCover from './imgCover'
 
+import { Link } from 'react-router-dom';
+
 interface Idetail {
   title: string,
   content: string
@@ -65,12 +67,13 @@ class Body extends React.Component {
                       <ul>
                         {interpolatingStyles.map((item: any, i: number) => {
                           return (
+                            <Link to="/2048" key={i}>
                             <li
-                              key={i}
                               style={{marginLeft: `${item.marginLeft}vw`}}>
                               <div className="title">{ props.tabDetail[i].title }</div>
                               <div className="content">{ props.tabDetail[i].content }</div>
                             </li>
+                            </Link>
                           )
                         })}
                       </ul>

@@ -15,14 +15,14 @@ class Cube {
       this.class = 'cube-' + this.value
     }, 150)
   }
-  public combine () {
+  public combine = () => {
     this.value *= 2
     this.class = 'cube-' + this.value + ' animation'
     setTimeout(() => {
       this.class = 'cube-' + this.value
     }, 150)
   }
-  public zero (posCube: Cube) {
+  public zero = (posCube: Cube) => {
     this.dieCube = posCube
     this.static = 'die'
     this.class = 'cube-' + this.value * 2
@@ -31,7 +31,7 @@ class Cube {
       this.isShow = false
     }, 150)
   }
-  public setPos (arr: number[]) {
+  public setPos = (arr: number[]) => {
     if (this.nowPos) {
       this.prevPos = [...this.nowPos]
     }

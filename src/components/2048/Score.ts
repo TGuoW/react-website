@@ -29,7 +29,7 @@ class Score {
     this.score = 0
     this.matrixAttr = matrixAttr
   }
-  public render (oldMatrix: any, newMatrix: any) {
+  public render = (oldMatrix: any, newMatrix: any) => {
     const oldObj = {}
     const newObj = {}
     oldMatrix.forEach((element: any[]) => {

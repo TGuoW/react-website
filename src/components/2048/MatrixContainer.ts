@@ -8,7 +8,7 @@ class MatrixContainer {
     this.matrix = deepClone(matrix)
     return this
   }
-  public push () {
+  public push = () => {
     this.matrix = this.matrix.map((ele:Cube[]) => ele.filter((item) => !item.value)
                     .concat(ele.filter((item) => item.value)))
     return this
@@ -26,11 +26,11 @@ class MatrixContainer {
     })
     return this
   }
-  public reverseArr () {
+  public reverseArr = () => {
     this.matrix = this.matrix.map((ele: Cube[]) => ele.reverse())
     return this
   }
-  public reverseMatrix () {
+  public reverseMatrix = () => {
     const newMartrix = deepClone(this.matrix)
     for (let i = 0; i < newMartrix.length; i++) {
       for (let j = 0; j < newMartrix[i].length; j++) {
@@ -39,7 +39,7 @@ class MatrixContainer {
     }
     return this
   }
-  public end () {
+  public end = () => {
     return this.matrix
   }
 }
