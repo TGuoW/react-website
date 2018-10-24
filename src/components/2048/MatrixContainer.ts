@@ -1,6 +1,6 @@
 import Cube from './Cube'
 
-const deepClone = (matrix: any) => matrix.map((ele: Cube[]) => ele.slice(0))
+const deepClone = (matrix: Cube[][]) => matrix.map((ele: Cube[]) => ele.slice(0))
 
 class MatrixContainer {
   public matrix: any
@@ -9,11 +9,18 @@ class MatrixContainer {
     return this
   }
   public push = () => {
-    this.matrix = this.matrix.map((ele:Cube[]) => ele.filter((item) => !item.value)
-                    .concat(ele.filter((item) => item.value)))
+    this.matrix = this.matrix.map((ele: Cube[]) =>
+      ele.filter((item) =>
+        !item.value
+      ).concat(
+        ele.filter((item) =>
+          item && item.value
+        )
+      )
+    )
     return this
   }
-  public add () {
+  public add = () => {
     this.matrix = this.matrix.map((arr: Cube[]) => {
       for (let i = arr.length - 1; i > 0; i--) {
         if (arr[i].value === arr[i - 1].value) {

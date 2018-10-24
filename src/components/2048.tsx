@@ -49,11 +49,12 @@ class My2048 extends React.Component {
             ))}
             {this.state.cubeQueue.map((item, index) => {
               return (
-                <div key={index}
-                  className={'cube position' + item.nowPos[0] + '-' + item.nowPos[1] + ' ' + item.class + (item.value ? ' top-index' : '')}>
-                  { item.isShow ? (<div>{item.value}</div>) : ''}
-                  {/* <div>{item.value}</div> */}
-                </div>
+                item.isShow && item.value
+                  ? (<div key={index}
+                      className={'cube position' + item.nowPos[0] + '-' + item.nowPos[1] + ' ' + item.class + (item.value ? ' top-index' : '')}>
+                      <div>{item.value}</div>
+                    </div>)
+                  : ''
               )
             })}
           </div>

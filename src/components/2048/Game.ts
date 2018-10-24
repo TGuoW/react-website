@@ -8,9 +8,9 @@ interface Ipos {
   y: number
 }
 
-const deepClone = (matrix: any) => matrix.map((ele: Cube[]) => ele.map((i) => i.value))
+const deepClone = (matrix: Cube[][]): number[][] => matrix.map((ele: Cube[]) => ele.map((i) => i.value))
 
-const compareMatrix = (matrix1: any, matrix2: any) => {
+const compareMatrix = (matrix1: number[][], matrix2: Cube[][]): boolean => {
   let flag = true
   for (let i = 0; i < matrix1.length; i++) {
     for (let j = 0; j < matrix1[i].length; j++) {
@@ -25,7 +25,7 @@ const compareMatrix = (matrix1: any, matrix2: any) => {
   return flag
 }
 
-const setCubePos = (matrix: any, queue: Cube[]) => {
+const setCubePos = (matrix: Cube[][], queue: Cube[]) => {
   for (let i = 0; i < matrix.length; i++) {
     for (let j = 0; j < matrix[i].length; j++) {
       matrix[i][j].setPos([i, j])
@@ -39,7 +39,7 @@ const setCubePos = (matrix: any, queue: Cube[]) => {
   })
 }
 
-const checkMatrix = (matrix: any) => {
+const checkMatrix = (matrix: Cube[][]): boolean => {
   let flag = false
   matrix.forEach((item: Cube[], i: number) => {
     for (let j = 0; j < matrix[i].length - 1; j++) {
@@ -74,48 +74,47 @@ class Game {
   public event: Event
   public score: Score
   public callback: (cubeQueue: Cube[], matrixAttr: any, show: boolean) => void
-  constructor (initArr: any, callback: any) {
+  constructor (initArr: number[], callback: (cubeQueue: Cube[], matrixAttr: any, show: boolean) => void) {
     this.initArr = initArr
     this.callback = callback
   }
   public start = () => {
-    const self = this
     this.event = new Event()
     this.score = new Score(this.matrixAttr)
-    for (let i = 0; i < this.initArr[0]; i++) {
-      this.matrix.push(new Array(4))
-      for (let j = 0; j < this.initArr[1]; j++) {
-        this.matrix[i][j] = new Cube(0)
-      }
-    }
+
+    this.matrix = [0, 1, 2, 3].map((items) =>
+      [0, 1, 2, 3].map((item) =>
+        new Cube(0)
+      )
+    )
+
     this.cubeQueue = []
     this.callback(this.cubeQueue, this.matrixAttr, false)
     this.addCube()
-    console.log(this.cubeQueue[0])
     document.onkeydown = (e) => {
-      const matrix = deepClone(self.matrix)
+      const matrix = deepClone(this.matrix)
       switch (e.key) {
         case 'ArrowLeft':
-          self.matrix = self.event.left(self.matrix)
+          this.matrix = this.event.left(this.matrix)
           break
         case 'ArrowUp':
-          self.matrix = self.event.up(self.matrix)
+          this.matrix = this.event.up(this.matrix)
           break
         case 'ArrowRight':
-          self.matrix = self.event.right(self.matrix)
+          this.matrix = this.event.right(this.matrix)
           break
         case 'ArrowDown':
-          self.matrix = self.event.down(self.matrix)
+          this.matrix = this.event.down(this.matrix)
           break
       }
-      if (!compareMatrix(matrix, self.matrix)) {
-        const newScore = self.score.render(matrix, self.matrix)
-        setCubePos(self.matrix, self.cubeQueue)
-        self.matrixAttr = Object.assign({}, self.matrixAttr, newScore)
-        self.callback(self.cubeQueue, self.matrixAttr, false)
-        setTimeout(() => {
-          self.addCube()
-        }, 150)
+      if (!compareMatrix(matrix, this.matrix)) {
+        setCubePos(this.matrix, this.cubeQueue)
+        const newScore = this.score.render(matrix, this.matrix)
+        this.matrixAttr = Object.assign({}, this.matrixAttr, newScore)
+        this.callback(this.cubeQueue, this.matrixAttr, false)
+        // setTimeout(() => {
+        this.addCube()
+        // }, 150)
       }
     }
   }
@@ -124,7 +123,7 @@ class Game {
     console.log('end')
     document.onkeydown = null
   }
-  // TODO: fix add bug
+
   public addCube = () => {
     console.log('add')
     const value: number = Math.random() > 0.5 ? 4 : 2
@@ -138,7 +137,9 @@ class Game {
         }
       })
     })
+
     const index = Math.floor(Math.random() * tmp.length)
+    console.log(matrix, tmp, index)
     this.matrix[tmp[index].x][tmp[index].y] = newCube
 
     this.cubeQueue.forEach((element) => {
@@ -153,13 +154,13 @@ class Game {
     for (let i = 0; i < this.cubeQueue.length; i++) {
       if (this.cubeQueue[i].static === 'die') {
         this.cubeQueue[i].setPos([tmp[index].x, tmp[index].y])
-        this.cubeQueue.splice(i, 1)
+        this.cubeQueue.splice(i, 1, newCube)
         flag = true
         break
       }
       if (this.cubeQueue[i].nowPos[0] === tmp[index].x && this.cubeQueue[i].nowPos[1] === tmp[index].y) {
         console.log('success')
-        this.cubeQueue.splice(i, 1)
+        this.cubeQueue.splice(i, 1, newCube)
         flag = true
         break
       }
@@ -167,9 +168,7 @@ class Game {
     if (!flag) {
       this.cubeQueue.push(newCube)
     }
-
     newCube.setPos([tmp[index].x, tmp[index].y])
-    // this.matrix.splice(tmp[index].x, 1, this.matrix[tmp[index].x])
     this.callback(this.cubeQueue, this.matrixAttr, false)
     if (!checkIsEnd(this.matrix, tmp.length)) {
       this.end()
