@@ -79,6 +79,7 @@ class Game {
   public score: Score
   public startPos: number[]
   public endPos: number[]
+  public isRemove: boolean
   public callback: (cubeQueue: Cube[], matrixAttr: any, show: boolean) => void
   constructor (initArr: number[], callback: (cubeQueue: Cube[], matrixAttr: any, show: boolean) => void) {
     this.initArr = initArr
@@ -95,10 +96,12 @@ class Game {
     )
 
     this.cubeQueue = []
+    this.matrixAttr.score = 0
     this.callback(this.cubeQueue, this.matrixAttr, false)
     this.addCube()
     this.cacheKey= []
     this.isCathe = false
+    this.isRemove = false
     document.ontouchstart = (e) => {
       this.startPos = [e.touches[0].clientX, e.touches[0].clientY]
     }
@@ -106,6 +109,9 @@ class Game {
       this.endPos = [e.touches[0].clientX, e.touches[0].clientY]
     }
     document.ontouchend = (e) => {
+      if (!this.endPos || this.isRemove) {
+        return
+      }
       const x = this.endPos[0] - this.startPos[0]
       const y = this.endPos[1] - this.startPos[1]
       let direction = ''
@@ -235,6 +241,16 @@ class Game {
   }
   public removeCube = (index: number) => {
     this.cubeQueue[index].zero(this.cubeQueue[index])
+    setTimeout(() => {
+      this.callback(this.cubeQueue, this.matrixAttr, false)
+      this.continue()
+    }, 60)
+  }
+  public continue = () => {
+    this.isRemove = false
+  }
+  public pause = () => {
+    this.isRemove = true
   }
 }
 

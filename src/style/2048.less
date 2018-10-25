@@ -24,32 +24,45 @@
     // min-width: 16rem;
     background: rgb(51, 51, 51);
   }
-  .btn-group {
-    margin-top: 7vw;
-    margin-left: 5vw;
-    width: 40vw;
-    .btn-bg {
-      margin-top: 3vw;
-      cursor: pointer;
-      color: rgb(255, 255, 255);
-      background: rgb(148, 90, 3);
-      border-radius:200vw / 200;
-      padding: 2vw 2vw;
-      font-family: NeonTech;
-      .btn-bg1 {
-        font-size: 6vw;
-        padding: 5px 20px;
-        border-radius: 6px / 30%;
-        box-shadow: 0px 0px 10px rgb(87, 79, 12);
-        background: rgb(161, 144, 66);
-        transition: all 0.5s;
-        user-select: none;
-        &:hover {
-          background: rgb(223, 199, 93);
+  .attr {
+    display: flex;
+    justify-content: space-between;
+    .btn-group {
+      margin-top: 7vw;
+      margin-left: 5vw;
+      width: 40vw;
+      .btn-bg {
+        margin-top: 3vw;
+        cursor: pointer;
+        color: rgb(255, 255, 255);
+        background: rgb(148, 90, 3);
+        border-radius:200vw / 200;
+        padding: 2vw 2vw;
+        font-family: NeonTech;
+        .btn-bg1 {
+          font-size: 6vw;
+          padding: 5px 20px;
+          border-radius: 6px / 30%;
+          box-shadow: 0px 0px 10px rgb(87, 79, 12);
+          background: rgb(161, 144, 66);
+          transition: all 0.5s;
+          user-select: none;
+          &:hover {
+            background: rgb(223, 199, 93);
+          }
         }
       }
     }
+    .score {
+      margin-top: 7vw;
+      margin-right: 10vw;
+      width: auto;
+      text-align: center;
+      color: #fff;
+      font-size: 12vw;
+    }
   }
+
   .information {
     position: absolute;
     top: 0;

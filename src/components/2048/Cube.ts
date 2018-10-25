@@ -37,6 +37,9 @@ class Cube {
     }
     this.nowPos = [...arr]
   }
+  public deleteSelf = () => {
+    this.isShow = false
+  }
 }
 
 export default Cube
