@@ -15,16 +15,40 @@
   .bg {
     position: relative;
     width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     // height: 100%;
     // min-height: 420px;
     // min-width: 16rem;
     background: rgb(51, 51, 51);
   }
   .btn-group {
-    position: absolute;
-    top: 60px;
-    left: 60px;
-    width: auto;
+    margin-top: 7vw;
+    margin-left: 5vw;
+    width: 40vw;
+    .btn-bg {
+      margin-top: 3vw;
+      cursor: pointer;
+      color: rgb(255, 255, 255);
+      background: rgb(148, 90, 3);
+      border-radius:200vw / 200;
+      padding: 2vw 2vw;
+      font-family: NeonTech;
+      .btn-bg1 {
+        font-size: 6vw;
+        padding: 5px 20px;
+        border-radius: 6px / 30%;
+        box-shadow: 0px 0px 10px rgb(87, 79, 12);
+        background: rgb(161, 144, 66);
+        transition: all 0.5s;
+        user-select: none;
+        &:hover {
+          background: rgb(223, 199, 93);
+        }
+      }
+    }
   }
   .information {
     position: absolute;
@@ -54,12 +78,9 @@
     font-family: NeonTech;
     font-size: 32px;
     height: 100vw;
-    // min-width: 420px;
     width: 100%;
     background: rgb(148, 90, 3);
-    // padding: 16px;
     border-radius: 14px;
-    margin: auto;
     .box {
       position: relative;
       top: 0;

@@ -8,6 +8,8 @@ interface Ipos {
   y: number
 }
 
+// const MIN_TOUCH_LENGTh = 30
+
 const deepClone = (matrix: Cube[][]): number[][] => matrix.map((ele: Cube[]) => ele.map((i) => i.value))
 
 const compareMatrix = (matrix1: number[][], matrix2: Cube[][]): boolean => {
@@ -66,6 +68,8 @@ const checkIsEnd = (matrix: any, extraCubeNumber: number) => {
 
 class Game {
   public initArr: number[]
+  public cacheKey: string[]
+  public isCathe: boolean
   public matrix: any[][] = []
   public matrixAttr: any = {
     score: 0
@@ -73,6 +77,8 @@ class Game {
   public cubeQueue: Cube[] = []
   public event: Event
   public score: Score
+  public startPos: number[]
+  public endPos: number[]
   public callback: (cubeQueue: Cube[], matrixAttr: any, show: boolean) => void
   constructor (initArr: number[], callback: (cubeQueue: Cube[], matrixAttr: any, show: boolean) => void) {
     this.initArr = initArr
@@ -91,9 +97,56 @@ class Game {
     this.cubeQueue = []
     this.callback(this.cubeQueue, this.matrixAttr, false)
     this.addCube()
+    this.cacheKey= []
+    this.isCathe = false
+    document.ontouchstart = (e) => {
+      this.startPos = [e.touches[0].clientX, e.touches[0].clientY]
+    }
+    document.ontouchmove = (e) => {
+      this.endPos = [e.touches[0].clientX, e.touches[0].clientY]
+    }
+    document.ontouchend = (e) => {
+      const x = this.endPos[0] - this.startPos[0]
+      const y = this.endPos[1] - this.startPos[1]
+      let direction = ''
+      if (Math.abs(x) > Math.abs(y) && x < 0) {
+        direction = 'ArrowLeft'
+      } else if (Math.abs(x) > Math.abs(y) && x > 0) {
+        direction = 'ArrowRight'
+      } else if (Math.abs(x) < Math.abs(y) && y < 0) {
+        direction = 'ArrowUp'
+      } else if (Math.abs(x) < Math.abs(y) && y > 0) {
+        direction = 'ArrowDown'
+      } else {
+        return
+      }
+      this.cacheKey.push(direction)
+      if (!this.isCathe) {
+        this.nextStep()
+      }
+    }
     document.onkeydown = (e) => {
-      const matrix = deepClone(this.matrix)
       switch (e.key) {
+        case 'ArrowLeft':
+        case 'ArrowUp':
+        case 'ArrowRight':
+        case 'ArrowDown':
+          this.cacheKey.push(e.key)
+          console.log(this.cacheKey)
+          if (!this.isCathe) {
+            this.nextStep()
+          }
+          break
+      }
+    }
+  }
+
+  public nextStep = () => {
+    if (this.cacheKey[0]) {
+      this.isCathe = true
+      const key = this.cacheKey[0]
+      const matrix = deepClone(this.matrix)
+      switch (key) {
         case 'ArrowLeft':
           this.matrix = this.event.left(this.matrix)
           break
@@ -107,17 +160,23 @@ class Game {
           this.matrix = this.event.down(this.matrix)
           break
       }
-      if (!compareMatrix(matrix, this.matrix)) {
-        setCubePos(this.matrix, this.cubeQueue)
-        const newScore = this.score.render(matrix, this.matrix)
-        this.matrixAttr = Object.assign({}, this.matrixAttr, newScore)
+      setCubePos(this.matrix, this.cubeQueue)
+      const newScore = this.score.render(matrix, this.matrix)
+      this.matrixAttr = Object.assign({}, this.matrixAttr, newScore)
+      this.callback(this.cubeQueue, this.matrixAttr, false)
+      setTimeout(() => {
         this.callback(this.cubeQueue, this.matrixAttr, false)
-        // setTimeout(() => {
-        this.addCube()
-        // }, 150)
-      }
+        if (!compareMatrix(matrix, this.matrix)) {
+          this.addCube()
+        }
+        this.cacheKey.shift()
+        this.nextStep()
+      }, 60)
+    } else {
+      this.isCathe = false
     }
   }
+
   public end = () => {
     this.callback(this.cubeQueue, this.matrixAttr, true)
     console.log('end')
@@ -125,7 +184,7 @@ class Game {
   }
 
   public addCube = () => {
-    console.log('add')
+    // console.log('add')
     const value: number = Math.random() > 0.5 ? 4 : 2
     const newCube = new Cube(value)
     const matrix = [...this.matrix]
@@ -139,7 +198,6 @@ class Game {
     })
 
     const index = Math.floor(Math.random() * tmp.length)
-    console.log(matrix, tmp, index)
     this.matrix[tmp[index].x][tmp[index].y] = newCube
 
     this.cubeQueue.forEach((element) => {

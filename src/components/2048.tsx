@@ -37,9 +37,15 @@ class My2048 extends React.Component {
   public render() {
     return (
       <div className="bg">
-        <div className="method-items" onClick={this.state.Game.start}>
-          start
+        <div className="btn-group">
+          <div className="btn-bg" onClick={this.state.Game.start}>
+            <div className="btn-bg1">start</div>
+          </div>
+          <div className="btn-bg" onClick={this.state.Game.start}>
+            <div className="btn-bg1">remove</div>
+          </div>
         </div>
+
         <div className="table">
           <div className="box">
             {[0, 1, 2, 3].map((item, i) => (
@@ -49,7 +55,7 @@ class My2048 extends React.Component {
             ))}
             {this.state.cubeQueue.map((item, index) => {
               return (
-                item.isShow && item.value
+                item.isShow
                   ? (<div key={index}
                       className={'cube position' + item.nowPos[0] + '-' + item.nowPos[1] + ' ' + item.class + (item.value ? ' top-index' : '')}>
                       <div>{item.value}</div>

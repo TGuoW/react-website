@@ -29,7 +29,7 @@ class Cube {
     this.value = 0
     setTimeout(() => {
       this.isShow = false
-    }, 150)
+    }, 60)
   }
   public setPos = (arr: number[]) => {
     if (this.nowPos) {
