@@ -68,11 +68,11 @@ class Body extends React.Component {
                         {interpolatingStyles.map((item: any, i: number) => {
                           return (
                             <Link to="/2048" key={i}>
-                            <li
-                              style={{marginLeft: `${item.marginLeft}vw`}}>
-                              <div className="title">{ props.tabDetail[i].title }</div>
-                              <div className="content">{ props.tabDetail[i].content }</div>
-                            </li>
+                              <li
+                                style={{marginLeft: `${item.marginLeft}vw`}}>
+                                <div className="title">{ props.tabDetail[i].title }</div>
+                                <div className="content">{ props.tabDetail[i].content }</div>
+                              </li>
                             </Link>
                           )
                         })}

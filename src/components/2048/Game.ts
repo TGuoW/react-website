@@ -84,6 +84,8 @@ class Game {
   constructor (initArr: number[], callback: (cubeQueue: Cube[], matrixAttr: any, show: boolean) => void) {
     this.initArr = initArr
     this.callback = callback
+    this.matrixAttr.score = 0
+    this.callback(this.cubeQueue, this.matrixAttr, false)
   }
   public start = () => {
     this.event = new Event()

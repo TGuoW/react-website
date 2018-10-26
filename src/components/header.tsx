@@ -3,6 +3,8 @@ import { Motion, spring } from 'react-motion'
 import logo from '../logo.svg'
 import '../style/header.less'
 
+import { Link } from 'react-router-dom'
+
 const items = ['博学', '慎思', '明辨', '笃行']
 
 interface Istate {
@@ -46,10 +48,12 @@ class Header extends React.Component {
     }
     return (
       <header className="App-header">
-        <div className="title">
-          <img src={logo} className="logo" alt="logo" />
-          <h1 className="text">Welcome to React</h1>
-        </div>
+        <Link to="/">
+          <div className="title">
+            <img src={logo} className="logo" alt="logo" />
+            <h1 className="text">Welcome to React</h1>
+          </div>
+        </Link>
         <div className="method f-16 l-36">
           <i className="f-20 method-btn iconfont icon-menu" onClick={ this.showMethod }/>
           <Motion style={{x: spring(this.state.isShowMethod ? 1 : 0)}}>

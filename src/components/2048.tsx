@@ -2,6 +2,8 @@ import * as React from 'react'
 import '../style/2048.less'
 import Game from './2048/Game'
 
+import { Motion, spring } from 'react-motion'
+
 interface Istate {
   Game: Game,
   cubeQueue: any[],
@@ -65,9 +67,32 @@ class My2048 extends React.Component {
               <div className="btn-bg1">remove</div>
             </div>
           </div>
-          <div className="score">{this.state.matrixAttr.score}</div>
+          <div className="score">
+            <p style={{fontSize: '8vw'}}>score</p>
+            <p>{this.state.matrixAttr.score}</p>
+            <p style={{fontSize: '6vw'}}>highest score</p>
+            <p>{this.state.matrixAttr.score}</p>
+          </div>
         </div>
-
+        {this.state.isShowEnd
+          ? <div className="endInfo">
+            <Motion defaultStyle={{top: 0}} style={{top: spring(50, { stiffness: 300, damping: 20 })}}>
+              {inStyle => {
+                return (
+                  <div className="gameover" style={{top: inStyle.top + '%'}}>Game Over!</div>
+                )
+              }}
+            </Motion>
+            <Motion defaultStyle={{top: 0}} style={{top: spring(50, { stiffness: 300, damping: 20 })}}>
+              {inStyle => {
+                return (
+                  <div className="bar" style={{top: inStyle.top + '%', width: inStyle.top * 2 + '%'}}/>
+                )
+              }}
+            </Motion>
+          </div>
+          : ''
+        }
         <div className="table">
           <div className="box" onClick={this.handleClick}>
             {[0, 1, 2, 3].map((item, i) => (
