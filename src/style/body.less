@@ -47,24 +47,36 @@
   border-bottom-left-radius: 6px;
   padding: 20px 0;
   ul {
+    margin-left: 3vw;
     display: flex;
     li {
+      position: relative;
+      z-index: 1;
       font-size: 16px;
-      background: #fff;
+      // background: #fff;
       color: #000;
-      height: 60px;
+      height: 10vw;
       width: 20.5vw;
       min-width: 20.5vw;
-      border: 1px solid rgb(228, 228, 228);
+      // border: 1px solid rgb(228, 228, 228);
       border-radius: 6px;
       text-align: left;
-      padding: 0.5vw;
+      padding: 0.5vw 1.5vw;
       cursor: pointer;
       text-decoration: none;
-      &:hover {
-        background: rgb(223, 223, 223);
+      // &:hover {
+      //   background: rgb(223, 223, 223);
+      // }
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0; right: 0; bottom: 0; left: 0;
+        z-index: -1;
+        background: rgb(206, 192, 0);
+        transform: skew(-26deg);
       }
       .title {
+        margin-left: 1.5vw;
         font-weight: bolder;
         text-decoration: none;
       }
