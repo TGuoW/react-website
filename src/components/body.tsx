@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { spring } from 'react-motion'
 import '../style/body.less'
 import ImgCover from './imgCover'
 
@@ -15,8 +14,7 @@ interface Idetail {
 interface Istate {
   tabBtn: string[],
   activeTab: number,
-  tabDetail: Idetail[],
-  itemStyle: any
+  tabDetail: Idetail[]
 }
 
 class Body extends React.Component {
@@ -27,7 +25,6 @@ class Body extends React.Component {
     super(props)
     this.state = {
       activeTab: 0,
-      itemStyle: {height: 10},
       tabBtn: ['test', 'test', 'test'],
       tabDetail: []
     }
@@ -41,22 +38,8 @@ class Body extends React.Component {
     }
     this.setState({
       activeTab: Number(e.target.id),
-      tabDetail: [obj]
+      tabDetail: [obj, obj, obj]
     })
-  }
-
-  public itemClick = () => {
-    this.setState({
-      itemStyle: { height: 100 },
-    })
-  }
-  public getStyles = (prevStyles: any) => {
-    const endValue = prevStyles.map((item: any, i: number) => {
-      return i === 0
-        ? { marginLeft: spring(2, { stiffness: 300, damping: 20 }) }
-        : { marginLeft: spring(prevStyles[i - 1].marginLeft, { stiffness: 300, damping: 20 }) }
-    })
-    return endValue;
   }
 
   public render() {
@@ -70,7 +53,7 @@ class Body extends React.Component {
             )}
           </ul>
         </div>
-        <TabDetail tabDetail={this.state.tabDetail} getStyles={this.getStyles} itemStyle={this.state.itemStyle} itemClick={this.itemClick}/>
+        <TabDetail tabDetail={this.state.tabDetail} tab={this.state.activeTab}/>
       </div>
     );
   }
