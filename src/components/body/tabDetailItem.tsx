@@ -9,10 +9,17 @@ interface Idetail {
   content: string
 }
 
+interface Itarget {
+  clientX: number,
+  clientY: number
+}
+
 interface Istate {
   tabDetail: Idetail[],
   itemStyle: any,
-  itemHeight: number
+  itemHeight: number,
+  isShowCopyDiv: boolean,
+  target: Itarget
 }
 
 interface Iprops {
@@ -20,7 +27,7 @@ interface Iprops {
   marginLeft: number
 }
 
-class Body extends React.Component {
+class TabDetailItem extends React.Component {
   public state: Istate
   public timeID: any
   public props: Iprops
@@ -29,19 +36,30 @@ class Body extends React.Component {
     super(props)
     this.props = props
     this.state = {
-      itemHeight: 30,
+      isShowCopyDiv: false,
+      itemHeight: 15,
       itemStyle: {},
-      tabDetail: []
+      tabDetail: [],
+      target: {
+        clientX: 0,
+        clientY: 0
+      }
     }
   }
 
-  public itemClick = () => {
+  public itemClick = (e: any) => {
+    e.persist()
     this.setState({
-      itemHeight: 40,
+      isShowCopyDiv: true,
+      itemHeight: 100,
       itemStyle: {
         position: 'fixed',
-        top: 0
+        zIndex: 1200
       },
+      target: {
+        clientX: e.clientX,
+        clientY: e.clientY
+      }
     })
   }
 
@@ -54,16 +72,38 @@ class Body extends React.Component {
     return endValue;
   }
 
+  public getItemStyle = (x: number, interval: number) => {
+    const target = this.state.target
+    if (target.clientX) {
+      const tmp = x / interval
+      console.log(tmp)
+      const top: number = target.clientY -  (target.clientY - 0) / tmp
+      return {
+        'top': top + 'px',
+        'width': x + 15 + 'vw'
+      }
+    }
+    return {}
+  }
+
   public render() {
     return (
-      <Motion defaultStyle={{height: 60}} style={{height: spring(this.state.itemHeight)}}>
+      <Motion defaultStyle={{height: 30}} style={{height: spring(this.state.itemHeight)}}>
         { (inStyle) => {
           return (
-            <li
-              onClick={this.itemClick}
-              style={{marginLeft: `${this.props.marginLeft}vw`, height: inStyle.height + 'vw', ...this.state.itemStyle}}>
-              <div className="title">{ this.props.tabDetailItem.title }</div>
-              <div className="content">{ this.props.tabDetailItem.content }</div>
+            <li>
+              <div className="item"
+                onClick={this.itemClick}
+                style={{marginLeft: `${this.props.marginLeft}vw`, height: inStyle.height + 'vh', ...this.getItemStyle(inStyle.height - 15, 85), ...this.state.itemStyle}}>
+                <div className="title">{ this.props.tabDetailItem.title }</div>
+                <div className="content">{ this.props.tabDetailItem.content }</div>
+              </div>
+              { this.state.isShowCopyDiv ?
+                  <div className="item">
+                    <div className="title">{ this.props.tabDetailItem.title }</div>
+                    <div className="content">{ this.props.tabDetailItem.content }</div>
+                  </div> : ''
+              }
             </li>
           )
         }
@@ -73,4 +113,4 @@ class Body extends React.Component {
   }
 }
 
-export default Body;
+export default TabDetailItem;
