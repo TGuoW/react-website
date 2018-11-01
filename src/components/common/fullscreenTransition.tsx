@@ -1,23 +1,27 @@
 import * as React from 'react'
-// import {Motion, spring } from 'react-motion'
+import {Motion, spring } from 'react-motion'
 // import '../style/body.less'
 
 import {withRouter} from "react-router-dom";
 
 interface Itarget {
-  clientX: number,
-  clientY: number,
+  clientX: number
+  clientY: number
 }
 
 interface Istate {
-  itemStyle: any,
-  itemHeight: number,
-  isShowCopyDiv: boolean,
+  itemStyle: any
+  itemHeight: number
+  isShowCopyDiv: boolean
   target: Itarget
 }
 
 interface Iprops {
   history: any
+  children: any
+  targetID: number | string
+  to: string,
+  styles: object
 }
 
 class TabDetailItem extends React.Component {
@@ -41,7 +45,15 @@ class TabDetailItem extends React.Component {
 
   public itemClick = (e: any) => {
     e.persist()
-    const target = e.target.getBoundingClientRect()
+    const targetID= this.props.targetID
+    let target = e.target
+    while (target.id !== targetID) {
+      target = target.parentNode
+      if (target === null) {
+        return
+      }
+    }
+    const pos = target.getBoundingClientRect()
     this.setState({
       isShowCopyDiv: true,
       itemHeight: 100,
@@ -50,35 +62,24 @@ class TabDetailItem extends React.Component {
         zIndex: 1200
       },
       target: {
-        clientX: target.x,
-        clientY: target.y
+        clientX: pos.left,
+        clientY: pos.top
       }
     })
   }
 
-//   public getStyles = (prevStyles: any) => {
-//     const endValue = prevStyles.map((item: any, i: number) => {
-//       return i === 0
-//         ? { marginLeft: spring(2, { stiffness: 300, damping: 20 }) }
-//         : { marginLeft: spring(prevStyles[i - 1].marginLeft, { stiffness: 300, damping: 20 }) }
-//     })
-//     return endValue;
-//   }
-
   public getItemStyle = (x: number, interval: number) => {
     const target = this.state.target
-    if (!target.clientX) {
-      return
-    }
     const tmp = x / interval
     let height: number = 100
     let top: number = 0
     let left: number = 0
     let width: number = 100
+    let selfObj = {}
     if (tmp <= 0.5) {
       height = height - interval * (1 - tmp * 2)
       top = target.clientY -  (target.clientY - 0) * (tmp * 2)
-      return {
+      selfObj =  {
         'height': height + 'vh',
         'top': top + 'px'
       }
@@ -87,11 +88,10 @@ class TabDetailItem extends React.Component {
       width = width - (width - 20.5) * (1 - (tmp - 0.5) * 2)
       if (x === interval) {
         setTimeout(() => {
-          this.props.history.push("/2048")
+          this.props.history.push(this.props.to)
         })
-
       }
-      return {
+      selfObj =  {
         'height': height + 'vh',
         'left': left + 'px',
         'marginLeft': 0,
@@ -99,36 +99,45 @@ class TabDetailItem extends React.Component {
         'width': width + 'vw'
       }
     }
+    const arr = Object.keys(this.props.styles)
+    const attrObj = {}
+    arr.forEach((item) => {
+      const from = this.colorToNumber(this.props.styles[item].from)
+      const to = this.colorToNumber(this.props.styles[item].to)
+      const newColor = 'rga(' + from.map((i: number, index: number) => {
+        const colorTmp = i - (i - to[index]) * tmp
+        return colorTmp < 0 ? 256 + colorTmp : colorTmp
+      }).join(', ') + ')'
+      attrObj[item] = newColor
+    })
+    return Object.assign(selfObj, attrObj)
+  }
+
+  public colorToNumber =  (color: string) => {
+    const numberArr = color.split('(')[1].split(')')[0].split(',')
+    return numberArr.map((item: string) => Number(item))
   }
 
   public render() {
+    const { children } = this.props
     return (
-        <div/>
-    //   <Motion defaultStyle={{height: 30}} style={{height: spring(this.state.itemHeight, { stiffness: 53, damping: 40})}}>
-    //     { (inStyle) => {
-    //       return (
-    //         <li>
-    //           <div className="item"
-    //             onClick={this.itemClick}
-    //             style={{...this.getItemStyle(inStyle.height - 15, 85), ...this.state.itemStyle}}>
-    //             { !this.state.isShowCopyDiv ?
-    //               <div>
-    //                 <div className="title">{ this.props.tabDetailItem.title }</div>
-    //                 <div className="content">{ this.props.tabDetailItem.content }</div>
-    //               </div> : ''
-    //             }
-    //           </div>
-    //           { this.state.isShowCopyDiv ?
-    //               <div className="item">
-    //                 <div className="title">{ this.props.tabDetailItem.title }</div>
-    //                 <div className="content">{ this.props.tabDetailItem.content }</div>
-    //               </div> : ''
-    //           }
-    //         </li>
-    //       )
-    //     }
-    //   }
-    //   </Motion>
+      <div>
+        <Motion style={{height: spring(this.state.itemHeight, { stiffness: 65, damping: 15})}}>
+          { inStyle =>
+            <div
+              onClick={this.itemClick}
+              onTouchEnd={this.itemClick}
+              className={this.state.isShowCopyDiv ? children.props.className : ''}
+              style={this.state.isShowCopyDiv ? {...children.props.style, ...this.getItemStyle(inStyle.height - 15, 85), ...this.state.itemStyle } : {}}>
+              {!this.state.isShowCopyDiv ? children : null}
+            </div>
+          }
+        </Motion>
+        { this.state.isShowCopyDiv ?
+          <div>{children}</div>
+          : ''
+        }
+      </div>
     );
   }
 }
