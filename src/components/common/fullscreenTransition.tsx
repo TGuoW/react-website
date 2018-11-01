@@ -1,13 +1,8 @@
 import * as React from 'react'
-import {Motion, spring } from 'react-motion'
+// import {Motion, spring } from 'react-motion'
 // import '../style/body.less'
 
 import {withRouter} from "react-router-dom";
-
-interface Idetail {
-  title: string,
-  content: string
-}
 
 interface Itarget {
   clientX: number,
@@ -15,7 +10,6 @@ interface Itarget {
 }
 
 interface Istate {
-  tabDetail: Idetail[],
   itemStyle: any,
   itemHeight: number,
   isShowCopyDiv: boolean,
@@ -23,8 +17,6 @@ interface Istate {
 }
 
 interface Iprops {
-  tabDetailItem: any,
-  marginLeft: number,
   history: any
 }
 
@@ -40,7 +32,6 @@ class TabDetailItem extends React.Component {
       isShowCopyDiv: false,
       itemHeight: 15,
       itemStyle: {},
-      tabDetail: [],
       target: {
         clientX: 0,
         clientY: 0
@@ -65,14 +56,14 @@ class TabDetailItem extends React.Component {
     })
   }
 
-  public getStyles = (prevStyles: any) => {
-    const endValue = prevStyles.map((item: any, i: number) => {
-      return i === 0
-        ? { marginLeft: spring(2, { stiffness: 300, damping: 20 }) }
-        : { marginLeft: spring(prevStyles[i - 1].marginLeft, { stiffness: 300, damping: 20 }) }
-    })
-    return endValue;
-  }
+//   public getStyles = (prevStyles: any) => {
+//     const endValue = prevStyles.map((item: any, i: number) => {
+//       return i === 0
+//         ? { marginLeft: spring(2, { stiffness: 300, damping: 20 }) }
+//         : { marginLeft: spring(prevStyles[i - 1].marginLeft, { stiffness: 300, damping: 20 }) }
+//     })
+//     return endValue;
+//   }
 
   public getItemStyle = (x: number, interval: number) => {
     const target = this.state.target
@@ -112,31 +103,32 @@ class TabDetailItem extends React.Component {
 
   public render() {
     return (
-      <Motion defaultStyle={{height: 30}} style={{height: spring(this.state.itemHeight, { stiffness: 53, damping: 40})}}>
-        { (inStyle) => {
-          return (
-            <li>
-              <div className="item"
-                onClick={this.itemClick}
-                style={{marginLeft: `${this.props.marginLeft}vw`, height: inStyle.height + 'vh', ...this.getItemStyle(inStyle.height - 15, 85), ...this.state.itemStyle}}>
-                { !this.state.isShowCopyDiv ?
-                  <div>
-                    <div className="title">{ this.props.tabDetailItem.title }</div>
-                    <div className="content">{ this.props.tabDetailItem.content }</div>
-                  </div> : ''
-                }
-              </div>
-              { this.state.isShowCopyDiv ?
-                  <div className="item">
-                    <div className="title">{ this.props.tabDetailItem.title }</div>
-                    <div className="content">{ this.props.tabDetailItem.content }</div>
-                  </div> : ''
-              }
-            </li>
-          )
-        }
-      }
-      </Motion>
+        <div/>
+    //   <Motion defaultStyle={{height: 30}} style={{height: spring(this.state.itemHeight, { stiffness: 53, damping: 40})}}>
+    //     { (inStyle) => {
+    //       return (
+    //         <li>
+    //           <div className="item"
+    //             onClick={this.itemClick}
+    //             style={{...this.getItemStyle(inStyle.height - 15, 85), ...this.state.itemStyle}}>
+    //             { !this.state.isShowCopyDiv ?
+    //               <div>
+    //                 <div className="title">{ this.props.tabDetailItem.title }</div>
+    //                 <div className="content">{ this.props.tabDetailItem.content }</div>
+    //               </div> : ''
+    //             }
+    //           </div>
+    //           { this.state.isShowCopyDiv ?
+    //               <div className="item">
+    //                 <div className="title">{ this.props.tabDetailItem.title }</div>
+    //                 <div className="content">{ this.props.tabDetailItem.content }</div>
+    //               </div> : ''
+    //           }
+    //         </li>
+    //       )
+    //     }
+    //   }
+    //   </Motion>
     );
   }
 }
