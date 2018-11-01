@@ -2,7 +2,7 @@ import * as React from 'react'
 import {Motion, spring } from 'react-motion'
 // import '../style/body.less'
 
-// import { Link } from 'react-router-dom';
+import {withRouter} from "react-router-dom";
 
 interface Idetail {
   title: string,
@@ -11,7 +11,7 @@ interface Idetail {
 
 interface Itarget {
   clientX: number,
-  clientY: number
+  clientY: number,
 }
 
 interface Istate {
@@ -24,7 +24,8 @@ interface Istate {
 
 interface Iprops {
   tabDetailItem: any,
-  marginLeft: number
+  marginLeft: number,
+  history: any
 }
 
 class TabDetailItem extends React.Component {
@@ -74,16 +75,38 @@ class TabDetailItem extends React.Component {
 
   public getItemStyle = (x: number, interval: number) => {
     const target = this.state.target
-    if (target.clientX) {
-      const tmp = x / interval
-      console.log(tmp)
-      const top: number = target.clientY -  (target.clientY - 0) / tmp
+    if (!target.clientX) {
+      return
+    }
+    const tmp = x / interval
+    let height: number = 100
+    let top: number = 0
+    let left: number = 0
+    let width: number = 100
+    if (tmp <= 0.5) {
+      height = height - interval * (1 - tmp * 2)
+      top = target.clientY -  (target.clientY - 0) * (tmp * 2)
       return {
+        'height': height + 'vh',
+        'top': top + 'px'
+      }
+    } else {
+      left = target.clientX -  (target.clientX - 0) * ((tmp - 0.5) * 2)
+      width = width - (width - 20.5) * (1 - (tmp - 0.5) * 2)
+      if (x === interval) {
+        setTimeout(() => {
+          this.props.history.push("/2048")
+        })
+
+      }
+      return {
+        'height': height + 'vh',
+        'left': left + 'px',
+        'marginLeft': 0,
         'top': top + 'px',
-        'width': x + 15 + 'vw'
+        'width': width + 'vw'
       }
     }
-    return {}
   }
 
   public render() {
@@ -95,8 +118,12 @@ class TabDetailItem extends React.Component {
               <div className="item"
                 onClick={this.itemClick}
                 style={{marginLeft: `${this.props.marginLeft}vw`, height: inStyle.height + 'vh', ...this.getItemStyle(inStyle.height - 15, 85), ...this.state.itemStyle}}>
-                <div className="title">{ this.props.tabDetailItem.title }</div>
-                <div className="content">{ this.props.tabDetailItem.content }</div>
+                { !this.state.isShowCopyDiv ?
+                  <div>
+                    <div className="title">{ this.props.tabDetailItem.title }</div>
+                    <div className="content">{ this.props.tabDetailItem.content }</div>
+                  </div> : ''
+                }
               </div>
               { this.state.isShowCopyDiv ?
                   <div className="item">
@@ -113,4 +140,4 @@ class TabDetailItem extends React.Component {
   }
 }
 
-export default TabDetailItem;
+export default withRouter(TabDetailItem);
