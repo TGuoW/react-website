@@ -44,7 +44,7 @@ class ImgCover extends React.Component {
               <Motion style={{x: spring(width, { stiffness: 120, damping: 14 })}} key={i.toString()}>
                 {inStyle => {
                   return (
-                    <li className="motion-bar" style={{width: `${inStyle.x * 75 + 20}vw`}}/>
+                    <li className="motion-bar" style={{width: `${inStyle.x * 55 + 20}vw`}}/>
                   )}
                 }
               </Motion>

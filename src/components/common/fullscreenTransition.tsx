@@ -2,7 +2,7 @@ import * as React from 'react'
 import {Motion, spring } from 'react-motion'
 // import '../style/body.less'
 
-import {withRouter} from "react-router-dom";
+import {withRouter} from "react-router-dom"
 
 interface Itarget {
   clientX: number
@@ -22,6 +22,11 @@ interface Iprops {
   targetID: number | string
   to: string,
   styles: object
+}
+
+const colorToNumber = (color: string) => {
+  const numberArr = color.split('(')[1].split(')')[0].split(',')
+  return numberArr.map((item: string) => Number(item))
 }
 
 class TabDetailItem extends React.Component {
@@ -102,20 +107,15 @@ class TabDetailItem extends React.Component {
     const arr = Object.keys(this.props.styles)
     const attrObj = {}
     arr.forEach((item) => {
-      const from = this.colorToNumber(this.props.styles[item].from)
-      const to = this.colorToNumber(this.props.styles[item].to)
-      const newColor = 'rga(' + from.map((i: number, index: number) => {
+      const from = colorToNumber(this.props.styles[item].from)
+      const to = colorToNumber(this.props.styles[item].to)
+      const newColor = 'rgb(' + from.map((i: number, index: number) => {
         const colorTmp = i - (i - to[index]) * tmp
-        return colorTmp < 0 ? 256 + colorTmp : colorTmp
+        return parseInt((colorTmp < 0 ? 256 + colorTmp : colorTmp).toString(), 10)
       }).join(', ') + ')'
       attrObj[item] = newColor
     })
     return Object.assign(selfObj, attrObj)
-  }
-
-  public colorToNumber =  (color: string) => {
-    const numberArr = color.split('(')[1].split(')')[0].split(',')
-    return numberArr.map((item: string) => Number(item))
   }
 
   public render() {

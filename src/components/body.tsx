@@ -25,7 +25,7 @@ class Body extends React.Component {
     super(props)
     this.state = {
       activeTab: 0,
-      tabBtn: ['test', 'test', 'test'],
+      tabBtn: ['test', 'test', 'test', 'test'],
       tabDetail: []
     }
   }
@@ -38,7 +38,7 @@ class Body extends React.Component {
     }
     this.setState({
       activeTab: Number(e.target.id),
-      tabDetail: [obj, obj, obj]
+      tabDetail: [obj, obj, obj, obj]
     })
   }
 

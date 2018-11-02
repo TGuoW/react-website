@@ -60,7 +60,6 @@ class Body extends React.Component {
     const boxes = this.props.tabDetail.map(() => {
       return { marginLeft: 100 }
     })
-    console.log(this.props)
     const TabDetail = (props: any) => {
       return (
         props.tabDetail.length > 0 ? (
@@ -75,21 +74,6 @@ class Body extends React.Component {
                         {interpolatingStyles.map((item: any, i: number) => {
                           return (
                             <TabDetailItem key={i} tabDetailItem={props.tabDetail[i]} marginLeft={item.marginLeft}/>
-                            // <Link to="/2048" key={i}>
-                              // <Motion key={i} defaultStyle={{height: 60}} style={{height: spring(props.itemStyle.height)}}>
-                              //   { (itemStyle) => {
-                              //     return (
-                              //       <li
-                              //         onClick={props.itemClick}
-                              //         style={{marginLeft: `${item.marginLeft}vw`, height: itemStyle.height + 'vw'}}>
-                              //         <div className="title">{ props.tabDetail[i].title }</div>
-                              //         <div className="content">{ props.tabDetail[i].content }</div>
-                              //       </li>
-                              //     )
-                              //   }
-                              // }
-                              // </Motion>
-                            // </Link>
                           )
                         })}
                       </ul>
