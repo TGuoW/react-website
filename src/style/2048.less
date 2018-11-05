@@ -1,3 +1,6 @@
+@my2048-width: (100vh) / 1.629;
+@background: rgb(51, 51, 51);
+
 @keyframes conbineCube {
     from {
       transform: scale(1)
@@ -9,25 +12,33 @@
       transform: scale(1)
     }
   }
-  @media only screen and (min-width: 769px) {
+  @media only screen and (min-width: 668px) {
+    .bg {
+      .body {
+        width: @my2048-width;
+        background: rgb(68, 68, 68);
+      }
+    }
     .table {
-      height: (100vh) / 1.629;
-      width: (100vh) / 1.629;
+      height: @my2048-width;
+      width: @my2048-width;
     }
     .attr {
-      width: (100vh) / 1.629;
-    }
-    .btn-group {
-      width: (100vh) * 0.4 / 1.629;
+      width: @my2048-width;
     }
   }
-  @media only screen and (max-width: 768px) {
+  @media only screen and (max-width: 667px) {
+    .bg {
+      .body {
+        width: 100vw;
+      }
+    }
     .table {
       height: 100vw;
       width: 100%;
     }
-    .btn-group {
-      width: 40vw;
+    .attr {
+      width: 100vw;
     }
   }
   .animation {
@@ -37,32 +48,32 @@
     position: relative;
     width: 100%;
     flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    // height: 100%;
-    // min-height: 420px;
-    // min-width: 16rem;
-    background: rgb(51, 51, 51);
+    background: @background;
+    .body {
+      position: relative;
+      height: 100%;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
   }
   .attr {
     display: flex;
     margin: 0 auto;
     justify-content: space-between;
     .btn-group {
-      margin-top: 7vw;
-      margin-left: 5vw;
-      width: 40vw;
+      margin-left: 28px;
+      margin-top: 14px;
       .btn-bg {
-        margin-top: 3vw;
-        cursor: pointer;
+        margin-top: 28px;
         color: rgb(255, 255, 255);
         background: rgb(148, 90, 3);
-        border-radius:200vw / 200;
-        padding: 2vw 2vw;
+        border-radius: 4px;
+        padding: 10px 10px;
         font-family: NeonTech;
-        .btn-bg1 {
-          font-size: 6vw;
+        .btn-bg-able {
+          cursor: pointer;
           padding: 5px 20px;
           border-radius: 6px / 30%;
           box-shadow: 0px 0px 10px rgb(87, 79, 12);
@@ -72,16 +83,31 @@
           &:hover {
             background: rgb(223, 199, 93);
           }
+          &:active {
+            background: rgb(223, 199, 93);
+          }
+        }
+        .btn-bg-disable {
+          cursor: no-drop;
+          padding: 5px 20px;
+          border-radius: 6px / 30%;
+          box-shadow: 0px 0px 10px rgb(87, 79, 12);
+          background: rgb(112, 112, 112);
+          transition: all 0.5s;
+          user-select: none;
         }
       }
     }
     .score {
-      margin-top: 7vw;
-      margin-right: 10vw;
+      margin-top: 28px;
+      margin-right: 28px;
       width: auto;
       text-align: right;
       color: #fff;
-      font-size: 10vw;
+      font-size: 36px;
+      .text {
+        font-size: 28px;
+      }
     }
   }
 
@@ -151,9 +177,6 @@
     .top-index {
       z-index: 10;
     }
-    // .animation {
-    //   animation: conbineCube 0.15s infinite;
-    // }
     .cube {
       position: absolute;
       width: 22.5%;
@@ -163,10 +186,11 @@
       text-align: center;
       transition: all 0.15s;
       div {
+        font-size: 36px;
         position: absolute;
         width: 100%;
-        height: 100%;
-        line-height: 22.5vw;
+        height: 36px;
+        line-height: 36px;
         right: 0;
         left: 0;
         top: 0;

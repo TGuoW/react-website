@@ -27,7 +27,7 @@ class My2048 extends React.Component {
   }
 
   public componentDidMount () {
-    document.addEventListener('touchmove', (e) => {e.preventDefault()}, false);
+    // document.addEventListener('touchmove', (e) => {e.preventDefault()}, false);
 
     this.setState({
       Game: new Game([4, 4], (cubeQueue: any[], matrixAttr: any, isShowEnd: boolean): void => {
@@ -58,58 +58,60 @@ class My2048 extends React.Component {
   public render() {
     return (
       <div className="bg">
-        <div className="attr">
-          <div className="btn-group">
-            <div className="btn-bg" onClick={this.state.Game.start}>
-              <div className="btn-bg1">start</div>
-            </div>
-            <div className="btn-bg" onClick={this.removeCube}>
-              <div className="btn-bg1">remove</div>
-            </div>
-          </div>
-          <div className="score">
-            <p style={{fontSize: '8vw'}}>score</p>
-            <p>{this.state.matrixAttr.score}</p>
-            <p style={{fontSize: '6vw'}}>highest score</p>
-            <p>{this.state.matrixAttr.score}</p>
-          </div>
-        </div>
-        {this.state.isShowEnd
-          ? <div className="endInfo">
-            <Motion defaultStyle={{top: 0}} style={{top: spring(50, { stiffness: 300, damping: 20 })}}>
-              {inStyle => {
-                return (
-                  <div className="gameover" style={{top: inStyle.top + '%'}}>Game Over!</div>
-                )
-              }}
-            </Motion>
-            <Motion defaultStyle={{top: 0}} style={{top: spring(50, { stiffness: 300, damping: 20 })}}>
-              {inStyle => {
-                return (
-                  <div className="bar" style={{top: inStyle.top + '%', width: inStyle.top * 2 + '%'}}/>
-                )
-              }}
-            </Motion>
-          </div>
-          : ''
-        }
-        <div className="table">
-          <div className="box" onClick={this.handleClick}>
-            {[0, 1, 2, 3].map((item, i) => (
-              <div key={i}>
-                {[0, 1, 2, 3].map((ele, j) => (<div key={j} className={'cell position' + i + '-' + j}/>))}
+        <div className="body">
+          <div className="attr">
+            <div className="btn-group">
+              <div className="btn-bg" onClick={this.state.Game.start}>
+                <div className="btn-bg-able">start</div>
               </div>
-            ))}
-            {this.state.cubeQueue.map((item, index) => {
-              return (
-                item.isShow
-                  ? (<div key={index}
-                      className={'cube position' + item.nowPos[0] + '-' + item.nowPos[1] + ' ' + item.class + (item.value ? ' top-index' : '')}>
-                      <div data-index={index}>{item.value ? item.value : ''}</div>
-                    </div>)
-                  : ''
-              )
-            })}
+              <div className="btn-bg" onClick={this.removeCube}>
+                <div className={this.state.matrixAttr.removeCubeNumber ? 'btn-bg-able' : 'btn-bg-disable'}>remove({this.state.matrixAttr.removeCubeNumber})</div>
+              </div>
+            </div>
+            <div className="score">
+              <p className="text">score</p>
+              <p>{this.state.matrixAttr.score}</p>
+              <p className="text">highest</p>
+              <p>{this.state.matrixAttr.highestScore}</p>
+            </div>
+          </div>
+          {this.state.isShowEnd
+            ? <div className="endInfo">
+              <Motion defaultStyle={{top: 0}} style={{top: spring(50, { stiffness: 300, damping: 20 })}}>
+                {inStyle => {
+                  return (
+                    <div className="gameover" style={{top: inStyle.top + '%'}}>Game Over!</div>
+                  )
+                }}
+              </Motion>
+              <Motion defaultStyle={{top: 0}} style={{top: spring(50, { stiffness: 300, damping: 20 })}}>
+                {inStyle => {
+                  return (
+                    <div className="bar" style={{top: inStyle.top + '%', width: inStyle.top * 2 + '%'}}/>
+                  )
+                }}
+              </Motion>
+            </div>
+            : ''
+          }
+          <div className="table">
+            <div className="box" onClick={this.handleClick}>
+              {[0, 1, 2, 3].map((item, i) => (
+                <div key={i}>
+                  {[0, 1, 2, 3].map((ele, j) => (<div key={j} className={'cell position' + i + '-' + j}/>))}
+                </div>
+              ))}
+              {this.state.cubeQueue.map((item, index) => {
+                return (
+                  item.isShow
+                    ? (<div key={index}
+                        className={'cube position' + item.nowPos[0] + '-' + item.nowPos[1] + ' ' + item.class + (item.value ? ' top-index' : '')}>
+                        <div data-index={index}>{item.value ? item.value : ''}</div>
+                      </div>)
+                    : ''
+                )
+              })}
+            </div>
           </div>
         </div>
       </div>

@@ -3,8 +3,8 @@ import Cube from './Cube'
 const deepClone = (matrix: Cube[][]) => matrix.map((ele: Cube[]) => ele.slice(0))
 
 class MatrixContainer {
-  public matrix: any
-  constructor (matrix: any) {
+  public matrix: Cube[][]
+  constructor (matrix: Cube[][]) {
     this.matrix = deepClone(matrix)
     return this
   }

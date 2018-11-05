@@ -1,3 +1,6 @@
+import Cube from './Cube'
+import { ImatrixAttr } from './interface'
+
 const diffObj = (oldObj: any, newObj: any) => {
   let score = 0
   for (let i = 17; i > 1; i--) {
@@ -24,15 +27,15 @@ const diffObj = (oldObj: any, newObj: any) => {
 
 class Score {
   public score: number
-  public matrixAttr: any
-  constructor (matrixAttr: any) {
+  public matrixAttr: ImatrixAttr
+  constructor (matrixAttr: ImatrixAttr) {
     this.score = 0
     this.matrixAttr = matrixAttr
   }
   public render = (oldMatrix: any, newMatrix: any) => {
     const oldObj = {}
     const newObj = {}
-    oldMatrix.forEach((element: any[]) => {
+    oldMatrix.forEach((element: number[]) => {
       element.forEach((item) => {
         if (oldObj[item]) {
           oldObj[item]++
@@ -41,7 +44,7 @@ class Score {
         }
       })
     })
-    newMatrix.forEach((element: any[]) => {
+    newMatrix.forEach((element: Cube[]) => {
       element.forEach((item) => {
         if (item.value && item.static !== 'die') {
           if (newObj[item.value]) {

@@ -1,14 +1,10 @@
 import Cube from './Cube'
 import Event from './Event'
+import { ImatrixAttr, Ipos } from './interface'
 import MatrixContainer from './MatrixContainer'
 import Score from './Score'
 
-interface Ipos {
-  x: number,
-  y: number
-}
-
-// const MIN_TOUCH_LENGTh = 30
+const MIN_TOUCH_LENGTH = 30
 
 const deepClone = (matrix: Cube[][]): number[][] => matrix.map((ele: Cube[]) => ele.map((i) => i.value))
 
@@ -53,7 +49,7 @@ const checkMatrix = (matrix: Cube[][]): boolean => {
   return flag
 }
 
-const checkIsEnd = (matrix: any, extraCubeNumber: number) => {
+const checkIsEnd = (matrix: Cube[][], extraCubeNumber: number) => {
   try {
     if (extraCubeNumber > 1) {
       return true
@@ -70,21 +66,23 @@ class Game {
   public initArr: number[]
   public cacheKey: string[]
   public isCathe: boolean
-  public matrix: any[][] = []
-  public matrixAttr: any = {
-    score: 0
-  }
+  public matrix: Cube[][] = []
+  public matrixAttr: ImatrixAttr
   public cubeQueue: Cube[] = []
   public event: Event
   public score: Score
   public startPos: number[]
   public endPos: number[]
   public isRemove: boolean
-  public callback: (cubeQueue: Cube[], matrixAttr: any, show: boolean) => void
-  constructor (initArr: number[], callback: (cubeQueue: Cube[], matrixAttr: any, show: boolean) => void) {
+  public callback: (cubeQueue: Cube[], matrixAttr: ImatrixAttr, show: boolean) => void
+  constructor (initArr: number[], callback: (cubeQueue: Cube[], matrixAttr: ImatrixAttr, show: boolean) => void) {
     this.initArr = initArr
     this.callback = callback
-    this.matrixAttr.score = 0
+    this.matrixAttr = {
+      highestScore: localStorage.getItem('highestScore') ? localStorage.getItem('highestScore') : 0,
+      removeCubeNumber: 3,
+      score: 0
+    }
     this.callback(this.cubeQueue, this.matrixAttr, false)
   }
   public start = () => {
@@ -99,7 +97,7 @@ class Game {
 
     this.cubeQueue = []
     this.matrixAttr.score = 0
-    this.callback(this.cubeQueue, this.matrixAttr, false)
+    this.matrixAttr.removeCubeNumber = 3
     this.addCube()
     this.cacheKey= []
     this.isCathe = false
@@ -116,7 +114,10 @@ class Game {
       }
       const x = this.endPos[0] - this.startPos[0]
       const y = this.endPos[1] - this.startPos[1]
-      let direction = ''
+      if (Math.abs(x) < MIN_TOUCH_LENGTH && Math.abs(y) < MIN_TOUCH_LENGTH) {
+        return
+      }
+      let direction: string = ''
       if (Math.abs(x) > Math.abs(y) && x < 0) {
         direction = 'ArrowLeft'
       } else if (Math.abs(x) > Math.abs(y) && x > 0) {
@@ -140,7 +141,6 @@ class Game {
         case 'ArrowRight':
         case 'ArrowDown':
           this.cacheKey.push(e.key)
-          console.log(this.cacheKey)
           if (!this.isCathe) {
             this.nextStep()
           }
@@ -186,16 +186,19 @@ class Game {
   }
 
   public end = () => {
+    const highestScore = localStorage.getItem('highestScore')
+    if (Number(highestScore) < this.matrixAttr.score) {
+      this.matrixAttr.highestScore = this.matrixAttr.score
+      localStorage.setItem('highestScore', this.matrixAttr.score.toString())
+    }
     this.callback(this.cubeQueue, this.matrixAttr, true)
-    console.log('end')
     document.onkeydown = null
   }
 
   public addCube = () => {
-    // console.log('add')
     const value: number = Math.random() > 0.5 ? 4 : 2
     const newCube = new Cube(value)
-    const matrix = [...this.matrix]
+    const matrix = this.matrix
     const tmp: Ipos[] = []
     matrix.forEach((element, i) => {
       element.forEach((item, idx) => {
@@ -225,7 +228,6 @@ class Game {
         break
       }
       if (this.cubeQueue[i].nowPos[0] === tmp[index].x && this.cubeQueue[i].nowPos[1] === tmp[index].y) {
-        console.log('success')
         this.cubeQueue.splice(i, 1, newCube)
         flag = true
         break
@@ -242,6 +244,10 @@ class Game {
     return
   }
   public removeCube = (index: number) => {
+    if (!this.matrixAttr.removeCubeNumber) {
+      return
+    }
+    this.matrixAttr.removeCubeNumber--
     this.cubeQueue[index].zero(this.cubeQueue[index])
     setTimeout(() => {
       this.callback(this.cubeQueue, this.matrixAttr, false)
