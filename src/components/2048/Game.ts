@@ -49,6 +49,22 @@ const checkMatrix = (matrix: Cube[][]): boolean => {
   return flag
 }
 
+const setCubeQueueToMatrix = (cubeQueue: Cube[], matrix: Cube[][]) => {
+  const newMatrix = matrix.map((item, index) => {
+    const tmp = item.map((v, i) => {
+      const newCube = new Cube(0)
+      newCube.setPos([index, i])
+      return newCube
+    })
+    return tmp
+  })
+  cubeQueue.forEach(item => {
+    const pos = item.nowPos
+    newMatrix[pos[0]][pos[1]] = item
+  })
+  return newMatrix
+}
+
 const checkIsEnd = (matrix: Cube[][], extraCubeNumber: number) => {
   try {
     if (extraCubeNumber > 1) {
@@ -74,6 +90,8 @@ class Game {
   public startPos: number[]
   public endPos: number[]
   public isRemove: boolean
+  public canUndo: boolean
+  public copyQueue: any[]
   public callback: (cubeQueue: Cube[], matrixAttr: ImatrixAttr, show: boolean) => void
   constructor (initArr: number[], callback: (cubeQueue: Cube[], matrixAttr: ImatrixAttr, show: boolean) => void) {
     this.initArr = initArr
@@ -102,6 +120,7 @@ class Game {
     this.cacheKey= []
     this.isCathe = false
     this.isRemove = false
+    this.canUndo = false
     document.ontouchstart = (e) => {
       this.startPos = [e.touches[0].clientX, e.touches[0].clientY]
     }
@@ -152,6 +171,8 @@ class Game {
   public nextStep = () => {
     if (this.cacheKey[0]) {
       this.isCathe = true
+      this.canUndo = true
+      this.copyQueue = this.cubeQueue.map((item) => item.getPrevStatus)
       const key = this.cacheKey[0]
       const matrix = deepClone(this.matrix)
       switch (key) {
@@ -172,6 +193,7 @@ class Game {
       const newScore = this.score.render(matrix, this.matrix)
       this.matrixAttr = Object.assign({}, this.matrixAttr, newScore)
       this.callback(this.cubeQueue, this.matrixAttr, false)
+      console.log(this.cubeQueue)
       setTimeout(() => {
         this.callback(this.cubeQueue, this.matrixAttr, false)
         if (!compareMatrix(matrix, this.matrix)) {
@@ -259,6 +281,21 @@ class Game {
   }
   public pause = () => {
     this.isRemove = true
+  }
+  public undo = () => {
+    if (!this.canUndo) {
+      return
+    }
+    this.canUndo = false
+    this.cubeQueue = []
+    this.copyQueue.map((item: object, index: number) => {
+      const newCube = new Cube(0)
+      newCube.setNowStatus(item)
+      this.cubeQueue[index] = newCube
+    })
+    this.matrix = setCubeQueueToMatrix(this.cubeQueue, this.matrix)
+    this.callback(this.cubeQueue, this.matrixAttr, false)
+    console.log(this.cubeQueue, 'undo')
   }
 }
 

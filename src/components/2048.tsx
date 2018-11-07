@@ -67,6 +67,9 @@ class My2048 extends React.Component {
               <div className="btn-bg" onClick={this.removeCube}>
                 <div className={this.state.matrixAttr.removeCubeNumber ? 'btn-bg-able' : 'btn-bg-disable'}>remove({this.state.matrixAttr.removeCubeNumber})</div>
               </div>
+              <div className="btn-bg" onClick={this.state.Game.undo}>
+                <div className="btn-bg-able">undo</div>
+              </div>
             </div>
             <div className="score">
               <p className="text">score</p>

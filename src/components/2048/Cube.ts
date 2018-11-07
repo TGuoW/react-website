@@ -6,6 +6,7 @@ class Cube {
   public nowPos: number[]
   public dieCube: Cube
   public isShow: boolean
+  public prevStatus: object
   constructor (value: number) {
     this.isShow = true
     this.static = 'alive'
@@ -39,6 +40,28 @@ class Cube {
   }
   public deleteSelf = () => {
     this.isShow = false
+  }
+  public get getPrevStatus (): object {
+    const obj = {
+      isShow: this.isShow,
+      nowPos: this.nowPos,
+      prevPos: this.prevPos,
+      static: this.static,
+      value: this.value
+    }
+    let dieObj = {}
+    if (this.dieCube) {
+      dieObj = {
+        dieCube: this.dieCube
+      }
+    }
+    return Object.assign(obj, dieObj)
+  }
+  public setNowStatus (obj: any) {
+    Object.keys(obj).map((item) => {
+      this[item] = obj[item]
+    })
+    this.class = 'cube-' + this.value + ' animation'
   }
 }
 
