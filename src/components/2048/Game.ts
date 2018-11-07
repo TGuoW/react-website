@@ -50,7 +50,7 @@ const checkMatrix = (matrix: Cube[][]): boolean => {
 }
 
 const setCubeQueueToMatrix = (cubeQueue: Cube[], matrix: Cube[][]) => {
-  const newMatrix = matrix.map((item, index) => {
+  matrix = matrix.map((item, index) => {
     const tmp = item.map((v, i) => {
       const newCube = new Cube(0)
       newCube.setPos([index, i])
@@ -59,10 +59,12 @@ const setCubeQueueToMatrix = (cubeQueue: Cube[], matrix: Cube[][]) => {
     return tmp
   })
   cubeQueue.forEach(item => {
+    // console.log(item.value)
     const pos = item.nowPos
-    newMatrix[pos[0]][pos[1]] = item
+    matrix[pos[0]][pos[1]] = item
   })
-  return newMatrix
+  // console.log(matrix.map(item => item.map(v => v.value)), 'undo')
+  return matrix
 }
 
 const checkIsEnd = (matrix: Cube[][], extraCubeNumber: number) => {
@@ -76,6 +78,20 @@ const checkIsEnd = (matrix: Cube[][], extraCubeNumber: number) => {
   } catch (e) {
     throw new Error(e)
   }
+}
+
+const test = (cubeQueue: Cube[], matrix: Cube[][]) => {
+
+  cubeQueue.forEach(item => {
+    const pos = item.nowPos
+    if (item.value !== matrix[pos[0]][pos[1]].value) {
+      console.log(pos, matrix[pos[0]][pos[1]], item, matrix)
+      console.log(cubeQueue.map(ite => ite.value))
+      console.log([...cubeQueue])
+console.log(matrix.map(it => it.map(v => v.value)), 'undo')
+      console.error('fail')
+    }
+  })
 }
 
 class Game {
@@ -193,11 +209,14 @@ class Game {
       const newScore = this.score.render(matrix, this.matrix)
       this.matrixAttr = Object.assign({}, this.matrixAttr, newScore)
       this.callback(this.cubeQueue, this.matrixAttr, false)
-      console.log(this.cubeQueue)
       setTimeout(() => {
         this.callback(this.cubeQueue, this.matrixAttr, false)
         if (!compareMatrix(matrix, this.matrix)) {
           this.addCube()
+          // console.log(this.cubeQueue.map(item => item.value))
+          // console.log(this.cubeQueue)
+          // console.log(this.matrix.map(item => item.map(v => v.value)))
+          test(this.cubeQueue, this.matrix)
         }
         this.cacheKey.shift()
         this.nextStep()
@@ -295,7 +314,10 @@ class Game {
     })
     this.matrix = setCubeQueueToMatrix(this.cubeQueue, this.matrix)
     this.callback(this.cubeQueue, this.matrixAttr, false)
-    console.log(this.cubeQueue, 'undo')
+    // console.log(this.copyQueue.map(item => item.value), 'undo')
+    // console.log(this.cubeQueue.map(item => item.value), 'undo')
+    // console.log(this.cubeQueue, 'undo')
+    // console.log(this.matrix.map(item => item.map(v => v.value)), 'undo')
   }
 }
 
